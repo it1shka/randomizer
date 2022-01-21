@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useSelector } from 'react-redux'
+import styled from 'styled-components'
+import AddVariant from './components/AddVariant'
+import AppBar from './components/AppBar'
+import Variants from './components/Variants'
+import WinnerInfo from './components/WinnerInfo'
+import { StateType } from './store'
 
-function App() {
+export default function App() {
+
+  const chosen = useSelector((state: StateType) => {
+    return state.chosen
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+    {chosen && <WinnerInfo />}
+    <OuterContainer>
+    <InnerContainer>
+      <AppBar />
+      <Variants />
+      <AddVariant />
+    </InnerContainer>
+    </OuterContainer>  
+    </>
+  )
 }
 
-export default App;
+const OuterContainer = styled.div`
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const InnerContainer = styled.div`
+  width: 100%;
+  max-width: 720px;
+  min-height: 640px;
+  box-shadow: #ddd 0px 0px 3px;
+  border-radius: 15px;
+  overflow: hidden;
+`
