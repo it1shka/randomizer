@@ -54,17 +54,13 @@ export function setSelecting(
   }
 }
 
-interface SetPointerAction {
-  type: 'SET_POINTER',
-  payload: number
+interface IncreasePointerAction {
+  type: 'INCREASE_POINTER',
 }
 
-export function setPointer(
-  pointer: number
-): SetPointerAction {
+export function increasePointer(): IncreasePointerAction {
   return {
-    type: 'SET_POINTER',
-    payload: pointer
+    type: 'INCREASE_POINTER'
   }
 }
 
@@ -87,7 +83,7 @@ type Action =
   | RemoveVariantAction
   | ClearVariantsAction
   | SetSelectingAction
-  | SetPointerAction
+  | IncreasePointerAction
   | SetChosenAction
 
 //#endregion
@@ -136,10 +132,10 @@ const reducer = (
         ...state,
         selecting: action.payload
       })
-    case 'SET_POINTER':
+    case 'INCREASE_POINTER':
       return ({
         ...state,
-        pointer: action.payload
+        pointer: (state.pointer + 1) % state.variants.length
       })
     case 'SET_CHOSEN':
       return ({

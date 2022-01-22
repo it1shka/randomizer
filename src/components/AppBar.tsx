@@ -1,10 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { clearVariants, DispatchType, setChosen, setPointer, setSelecting, StateType } from '../store'
+import { clearVariants, DispatchType, increasePointer, setChosen, setSelecting, StateType } from '../store'
 import Button from './Button'
 
-const randomInt = (max: number) => {
-  return Math.floor(Math.random() * max)
+const MIN_DELAY =  2 * 1000
+const MAX_DELAY = 6 * 1000
+
+function getRandomDelay(): number {
+  return MIN_DELAY + Math.random() * (MAX_DELAY - MIN_DELAY)
 }
 
 export default function AppBar() {
@@ -19,33 +22,31 @@ export default function AppBar() {
   const select = () => {
     dispatch(setSelecting(true))
     const interval = setInterval(() => {
-      const idx = randomInt(variants.length)
-      dispatch(setPointer(idx))
-    }, 250)
+      dispatch(increasePointer())
+    }, 75)
+    const delay = getRandomDelay()
     setTimeout(() => {
       clearInterval(interval)
       dispatch(setChosen(true))
-    }, 5 * 1000)
+    }, delay)
   }
 
   const clear = () => {
     dispatch(clearVariants())
   }
 
-  const disableButtons = selecting || (variants.length < 2)
-
   return (
     <Container>
       <h1>Randomizer</h1>
       <Button
-        disabled={disableButtons}
+        disabled={selecting}
         style={{margin: '0em 0.25em 0em auto'}}
         onClick={clear}
       >
         Clear
       </Button>
       <Button
-        disabled={disableButtons}
+        disabled={selecting || (variants.length < 2)}
         onClick={select}
         >
           Go!
